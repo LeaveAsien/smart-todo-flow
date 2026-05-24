@@ -1,0 +1,22 @@
+# 开发过程副本
+*- 副本*
+*- Copy*
+
+# 项目自身的任务管理文档（其他项目会自己生成）
+TODO.md
+CHANGELOG.md
+PLAN.md
+
+# 开发过程文档（不发布）
+CLAUDE.md
+需求文档.md
+设计决策记录.md
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
