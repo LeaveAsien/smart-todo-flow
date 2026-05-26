@@ -1,18 +1,27 @@
 # Smart TODO Flow
 
-A Claude Code skill that manages tasks with three linked documents: **PLAN.md** → **TODO.md** → **CHANGELOG.md**.
+A Claude Code skill that adds a lightweight execution memory layer for AI-assisted coding sessions, built around three linked documents: **PLAN.md** → **TODO.md** → **CHANGELOG.md**.
 
-Plan your direction, execute step by step, record every change — all persistent across sessions.
+Keep the big-picture plan, step-by-step execution, and changelog in sync across conversations.
 
 ## Why
 
-Claude Code is powerful, but out of the box it has some pain points for task management:
+Claude Code is powerful, but AI-assisted coding sessions have a few recurring workflow gaps:
 
-- **No persistent memory** — close the chat, and Claude forgets what you were working on, what's done, what's left
-- **Easy to lose the big picture** — without a clear plan, Claude tends to get lost in implementation details and lose sight of the overall direction
-- **Changes go unrecorded** — after a long session, it's hard to recall exactly what was changed; pairing with git-based changelog batching makes change tracking much cleaner
+- **No persistent execution memory** — close the chat, and the next session may lose what's done, what's left, and why
+- **Plan and execution drift apart** — a high-level PLAN.md can exist, but implementation often turns into scattered ad-hoc steps
+- **Changelog is hard to reconstruct later** — after a long session, it is easy to forget exactly what changed and which TODO item caused it
 
 Smart TODO Flow solves these by using three plain markdown files as persistent, human-readable project state.
+
+It is not trying to replace an issue tracker; it works best as the small local execution layer inside a project, feature branch, or local worktree.
+
+## Best For
+
+- Solo projects and small codebases
+- AI-assisted coding sessions that span multiple conversations
+- Feature branches or local worktrees that need branch-local execution notes
+- Lightweight changelog tracking without a full project management system
 
 ## How It Works
 
@@ -34,6 +43,52 @@ Write PLAN.md (goals & phases)
         ↓
   All done → review → clear → next phase
 ```
+
+## Demo
+
+Smart TODO Flow is easiest to understand as a before/after loop:
+
+```markdown
+# PLAN.md
+## Phase 2 — 功能扩展
+5. 标签系统
+6. RSS 订阅
+7. 搜索功能
+8. 暗色模式
+9. SEO 优化
+```
+
+Run:
+
+```text
+/todo
+```
+
+The skill turns the plan into an execution state:
+
+```markdown
+# TODO.md
+<!-- phase: 2 -->
+
+- [x] 文章 frontmatter 增加 tags 字段，解析并收集所有标签
+- [-] RSS 订阅：生成 feed.xml (blocked: 还没确定最终的文章 URL 结构，等产品确认)
+- [x] 搜索功能：集成 Fuse.js，首页顶部搜索框
+  - [x] [temp] 搜索结果高亮匹配关键词
+- [~] 暗色模式 (skipped: 设计稿还没给暗色配色方案)
+- [ ] SEO 优化：添加 Open Graph meta、生成 sitemap.xml (depends: 4)
+```
+
+As items are completed, the changelog is updated incrementally:
+
+```markdown
+# CHANGELOG.md
+## 2026-05-28 (Phase 2 收尾)
+- add RSS feed.xml + Atom 格式支持
+- add Open Graph meta 标签
+- add sitemap.xml 自动生成
+```
+
+See the full walkthrough in [`examples/`](examples/README.md).
 
 ## Install
 

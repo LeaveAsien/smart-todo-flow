@@ -65,6 +65,7 @@ Only suggest — never auto-mark. Wait for user confirmation.
 ## Progress Report
 
 Read TODO.md. Report current progress with state breakdown, then let the user decide how to proceed.
+When resuming, prefer TODO.md as the primary state source; read PLAN.md only when the phase marker, next-phase decision, or plan/task ambiguity requires it.
 
 Report format:
 ```
@@ -238,7 +239,7 @@ Changes are grouped into **batches** under a single heading.
 
 When a TODO item is completed:
 
-1. **Read CHANGELOG.md** (if it exists) — check for an open batch
+1. **Inspect CHANGELOG.md** (if it exists) — check the latest relevant section for an open batch; do not reread or summarize the full changelog during normal append
 2. **If an open batch exists** (with git: uncommitted changes under the latest heading; without git: current TODO round's heading) → append the new entry under the existing heading
 3. **If no open batch** (first change, or previous batch was sealed) → create a new heading at the top
 4. Write a concise one-line entry describing the change
@@ -283,6 +284,8 @@ When reading PLAN, focus on:
 - Specific goals for that phase
 - Any constraints or prerequisites
 - Phase structure for tracking progression
+
+Treat PLAN.md as a concise roadmap. If it is long, extract only the current phase goals, immediate constraints, and phase progression needed for this TODO round.
 
 If PLAN needs adjustment during execution (e.g. goals are outdated), remind the user to update PLAN, but do not modify it.
 
