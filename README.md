@@ -41,11 +41,20 @@ Two parts, both needed for the full experience:
 
 ### 1. Add the skill file
 
-Copy `smart-todo-flow.md` to your Claude Code skills directory:
+**Quick install (one command):**
 
+```bash
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md \
+  -o ~/.claude/skills/smart-todo-flow.md --create-dirs
+
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force ~/.claude/skills | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md" `
+  -OutFile "$HOME/.claude/skills/smart-todo-flow.md"
 ```
-~/.claude/skills/smart-todo-flow.md
-```
+
+**Or manually:** download [`smart-todo-flow.md`](smart-todo-flow.md) and place it in `~/.claude/skills/`.
 
 ### 2. Add rules to your project's CLAUDE.md
 
