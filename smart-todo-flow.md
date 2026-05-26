@@ -22,7 +22,7 @@ On entry, determine the current state by priority:
 3. **TODO.md exists but all items are resolved** (only `[x]`, `[-]`, `[~]` — no `[ ]`) → enter "Completion Pending"
 4. **TODO.md missing or empty** → enter "Generation Mode"
 
-If the user's input contains planning-level content (multiple directions, phase breakdowns, vision/goals) rather than specific tasks, enter "PLAN Guidance Mode" instead of generating TODO directly.
+In Generation Mode, if the user's input looks like it might contain planning-level content, offer a choice — don't decide for the user (see PLAN Guidance section).
 
 # Task States
 
@@ -172,24 +172,19 @@ When reading PLAN.md:
 
 The `<!-- phase: N -->` comment tracks which PLAN phase this TODO round corresponds to. No section headers, no dates, no priority markers beyond this. Pure checklist.
 
-# PLAN Guidance Mode
+# PLAN Guidance
 
-When the conversation produces **planning-level content** — such as multiple improvement directions, feature ideas, architectural options, or phased goals — the skill should recognize this and guide the user:
+When generating TODO, if the user's input looks like it might contain planning-level content (multiple directions, feature ideas, architectural options, phased goals), **don't auto-decide** — ask the user:
 
 ```
-These look like planning-level directions rather than immediate action items.
-Suggested workflow:
-1. Write these to PLAN.md first (as goals/phases)
-2. Then pick which ones to tackle now → generate TODO.md
+These could be planning directions or action items — you know best:
+1. Write to PLAN.md first, then pick items to generate TODO
+2. Directly generate TODO from these
 
-Want me to write these to PLAN.md?
+Which way?
 ```
 
-How to distinguish PLAN vs TODO content:
-- **PLAN-level**: multiple options/directions, "we could do X or Y", phase breakdowns, vision, goals, priorities — describes WHAT and WHY
-- **TODO-level**: concrete steps to execute a specific chosen direction — describes HOW
-
-If the user has already chosen and is giving specific instructions, go directly to TODO generation. Only trigger PLAN Guidance when the content is clearly directional/strategic.
+The skill does not judge whether content is "PLAN-level" or "TODO-level" — that distinction is up to the user. The skill only offers the choice when the input is ambiguous enough that it *might* belong in PLAN.
 
 # Temporary Tasks (Sub-TODOs)
 
