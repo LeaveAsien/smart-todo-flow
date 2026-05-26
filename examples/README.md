@@ -1,34 +1,34 @@
-# Smart TODO Flow Example
+# Smart TODO Flow 示例
 
-This example shows how Smart TODO Flow turns a project plan into a persistent execution loop:
+这个示例展示 Smart TODO Flow 如何将项目规划转化为持久的执行循环：
 
 ```text
-PLAN.md -> /todo -> TODO.md -> work item by item -> CHANGELOG.md
+PLAN.md -> /todo -> TODO.md -> 逐项执行 -> CHANGELOG.md
 ```
 
-The sample project is a personal blog. It starts with a phased plan, generates actionable TODO files, handles interrupts and blocked work, then records completed changes as a changelog.
+示例项目是一个个人博客。从分阶段规划开始，生成可执行的 TODO，处理中断和阻塞，最后将完成的变更记录为 changelog。
 
-## 1. Start With A Plan
+## 1. 从规划开始
 
-[`PLAN.md`](PLAN.md) describes the project direction:
+[`PLAN.md`](PLAN.md) 描述项目方向：
 
-- Phase 1: set up a blog with Next.js, Markdown posts, layout, and responsive pages
-- Phase 2: add tags, RSS, search, dark mode, and SEO
-- Phase 3: deploy, optimize performance, and write seed posts
+- Phase 1：用 Next.js 搭博客，Markdown 文章、布局、响应式页面
+- Phase 2：添加标签、RSS、搜索、暗色模式、SEO
+- Phase 3：部署上线、性能优化、撰写种子文章
 
-The skill reads this file as context. It does not rewrite the plan automatically, so the big-picture direction stays under your control.
+skill 读取这个文件作为上下文。它不会自动改写规划，大方向始终由你掌控。
 
-## 2. Generate The First TODO
+## 2. 生成第一轮 TODO
 
-When you run:
+运行：
 
 ```text
 /todo
 ```
 
-Smart TODO Flow detects that no active TODO exists and generates a concrete execution list for the current phase.
+skill 检测到没有活跃的 TODO，就会为当前阶段生成具体的执行清单。
 
-See [`TODO-phase1.md`](TODO-phase1.md):
+见 [`TODO-phase1.md`](TODO-phase1.md)：
 
 ```markdown
 <!-- phase: 1 -->
@@ -39,11 +39,11 @@ See [`TODO-phase1.md`](TODO-phase1.md):
 - [x] 首页文章列表：读取 /posts 目录，按日期倒序展示标题和摘要 (depends: 3)
 ```
 
-The generated TODO is not just a flat checklist. It can carry phase markers and dependency hints like `(depends: 3)`, so the assistant knows which items should come first.
+生成的 TODO 不只是一个平铺的清单。它可以带阶段标记和依赖提示（如 `(depends: 3)`），让助手知道哪些项应该先做。
 
-## 3. Keep Interrupts Without Losing The Main Flow
+## 3. 中断不丢失主线
 
-During implementation, small extra tasks often appear. Instead of replacing the main plan, Smart TODO Flow keeps them as temporary sub-items under the related task:
+执行过程中经常会冒出额外的小任务。Smart TODO Flow 把它们作为临时子项插在相关任务下面，而不是替换主线计划：
 
 ```markdown
 - [x] 代码高亮：集成 rehype-pretty-code (depends: 5)
@@ -51,11 +51,11 @@ During implementation, small extra tasks often appear. Instead of replacing the 
   - [x] [temp] 顺手把行号显示也加上
 ```
 
-This keeps side work visible without turning the whole TODO into noise.
+临时工作可见但不会把整个 TODO 变成噪音。
 
-## 4. Resume With Real Task State
+## 4. 带真实状态续接
 
-Phase 2 shows a more realistic mid-project state. See [`TODO-phase2.md`](TODO-phase2.md):
+Phase 2 展示了一个更真实的项目中期状态。见 [`TODO-phase2.md`](TODO-phase2.md)：
 
 ```markdown
 <!-- phase: 2 -->
@@ -65,18 +65,18 @@ Phase 2 shows a more realistic mid-project state. See [`TODO-phase2.md`](TODO-ph
 - [ ] SEO 优化：添加 Open Graph meta、生成 sitemap.xml (depends: 4)
 ```
 
-The status markers make resume behavior more useful:
+四种状态标记让续接更有用：
 
-- `[ ]` means not started
-- `[x]` means done
-- `[-]` means blocked, with the reason inline
-- `[~]` means skipped, with the reason inline
+- `[ ]` 未开始
+- `[x]` 已完成
+- `[-]` 阻塞，原因写在行内
+- `[~]` 跳过，原因写在行内
 
-When you come back later, the assistant can report what is done, what is blocked, what was skipped, and what can proceed next.
+下次回来时，助手可以报告哪些做完了、哪些阻塞了、哪些跳过了、哪些可以继续。
 
-## 5. Continue After A Blocker Is Resolved
+## 5. 阻塞解除后继续
 
-[`TODO-phase2-resumed.md`](TODO-phase2-resumed.md) shows the same phase after the RSS blocker is resolved:
+[`TODO-phase2-resumed.md`](TODO-phase2-resumed.md) 展示 RSS 阻塞解除后同一阶段的状态：
 
 ```markdown
 - [x] RSS 订阅：生成 feed.xml
@@ -85,11 +85,11 @@ When you come back later, the assistant can report what is done, what is blocked
 - [x] SEO 优化：添加 Open Graph meta、生成 sitemap.xml (depends: 4)
 ```
 
-Because SEO depended on RSS, it becomes safe to complete once RSS is unblocked.
+因为 SEO 依赖 RSS，RSS 解除阻塞后 SEO 才能安全完成。
 
-## 6. Record Changes As Work Finishes
+## 6. 完成时记录变更
 
-Each completed item is recorded in [`CHANGELOG.md`](CHANGELOG.md):
+每完成一项就会记录到 [`CHANGELOG.md`](CHANGELOG.md)：
 
 ```markdown
 ## 2026-05-28 (Phase 2 收尾)
@@ -98,10 +98,10 @@ Each completed item is recorded in [`CHANGELOG.md`](CHANGELOG.md):
 - add sitemap.xml 自动生成
 ```
 
-The result is a small but durable project memory:
+最终形成一套小而持久的项目记忆：
 
-- `PLAN.md` preserves direction
-- `TODO.md` tracks the current execution state
-- `CHANGELOG.md` records what actually changed
+- `PLAN.md` 保存方向
+- `TODO.md` 追踪当前执行状态
+- `CHANGELOG.md` 记录实际变更
 
-That is the core value: you can close the session, come back later, run `/todo`, and continue from a readable project state instead of reconstructing context from memory.
+这就是核心价值：关掉会话，下次回来运行 `/todo`，从可读的项目状态继续，而不是从头重建上下文。

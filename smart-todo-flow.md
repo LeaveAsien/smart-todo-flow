@@ -316,6 +316,7 @@ Commit message format: first read the project's recent git log and follow existi
 ```
 
 - Verbs: add / fix / optimize / refactor / update / remove, etc.
+- `<detail>` must be specific enough to understand the change without reading the diff — list what was added/changed/fixed, not just a category summary
 - Include quantified results when available (e.g. `match rate 49% → 54.7%`)
 - Single-line summary, no multi-line body (unless changes are substantial)
 

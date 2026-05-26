@@ -1,3 +1,5 @@
+[English](README.md) | [中文](README.zh-CN.md)
+
 # Smart TODO Flow
 
 A Claude Code skill that adds a lightweight execution memory layer for AI-assisted coding sessions, built around three linked documents: **PLAN.md** → **TODO.md** → **CHANGELOG.md**.
