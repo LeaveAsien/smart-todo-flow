@@ -52,12 +52,12 @@ Smart TODO Flow is easiest to understand as a before/after loop:
 
 ```markdown
 # PLAN.md
-## Phase 2 — 功能扩展
-5. 标签系统
-6. RSS 订阅
-7. 搜索功能
-8. 暗色模式
-9. SEO 优化
+## Phase 2 — Feature expansion
+5. Tag system
+6. RSS feed
+7. Search
+8. Dark mode
+9. SEO optimization
 ```
 
 Run:
@@ -72,22 +72,22 @@ The skill turns the plan into an execution state:
 # TODO.md
 <!-- phase: 2 -->
 
-- [x] 文章 frontmatter 增加 tags 字段，解析并收集所有标签
-- [-] RSS 订阅：生成 feed.xml (blocked: 还没确定最终的文章 URL 结构，等产品确认)
-- [x] 搜索功能：集成 Fuse.js，首页顶部搜索框
-  - [x] [temp] 搜索结果高亮匹配关键词
-- [~] 暗色模式 (skipped: 设计稿还没给暗色配色方案)
-- [ ] SEO 优化：添加 Open Graph meta、生成 sitemap.xml (depends: 4)
+- [x] Add tags field to post frontmatter, parse and collect all tags
+- [-] RSS feed: generate feed.xml (blocked: final post URL structure not decided, waiting for product confirmation)
+- [x] Search: integrate Fuse.js, search bar at top of homepage
+  - [x] [temp] Highlight matching keywords in search results
+- [~] Dark mode (skipped: design team hasn't provided dark color scheme)
+- [ ] SEO optimization: add Open Graph meta, generate sitemap.xml (depends: 4)
 ```
 
 As items are completed, the changelog is updated incrementally:
 
 ```markdown
 # CHANGELOG.md
-## 2026-05-28 (Phase 2 收尾)
-- add RSS feed.xml + Atom 格式支持
-- add Open Graph meta 标签
-- add sitemap.xml 自动生成
+## 2026-05-28 (Phase 2 wrap-up)
+- add RSS feed.xml + Atom format support
+- add Open Graph meta tags
+- add sitemap.xml auto-generation
 ```
 
 See the full walkthrough in [`examples/`](examples/README.md).
