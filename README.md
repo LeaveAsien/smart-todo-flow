@@ -115,7 +115,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-
 
 ### 2. Add rules to your project's CLAUDE.md
 
-Paste the content from [`claude-md-template.md`](claude-md-template.md) into your project's `CLAUDE.md` file.
+Paste the content from [`claude-md-template.en.md`](claude-md-template.en.md) into your project's `CLAUDE.md` file.
 
 This enables always-on behaviors (like writing changelog after every change) even outside of `/todo` sessions. Without it, these rules only apply when the skill is actively invoked.
 
@@ -179,7 +179,7 @@ That said, having a PLAN.md significantly improves the experience — it gives C
 ## FAQ
 
 **Q: I installed the skill but changelog isn't being written outside of `/todo` sessions.**
-A: You need to also paste the template from `claude-md-template.md` into your project's CLAUDE.md. The skill only activates when you call `/todo`; the CLAUDE.md rules are what make changelog writing always-on.
+A: You need to also paste the template from `claude-md-template.en.md` into your project's CLAUDE.md. The skill only activates when you call `/todo`; the CLAUDE.md rules are what make changelog writing always-on.
 
 **Q: Can I use this without git?**
 A: Yes. Git-dependent features (smart detection of completed work, commit option, commit-based changelog batching) are automatically skipped. Changelog batches by TODO round instead.
