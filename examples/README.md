@@ -1,107 +1,109 @@
-# Smart TODO Flow 示例
+[English](README.md) | [中文](README.zh-CN.md)
 
-这个示例展示 Smart TODO Flow 如何将项目规划转化为持久的执行循环：
+# Smart TODO Flow Examples
+
+This example shows how Smart TODO Flow turns a project plan into a persistent execution loop:
 
 ```text
-PLAN.md -> /todo -> TODO.md -> 逐项执行 -> CHANGELOG.md
+PLAN.md -> /todo -> TODO.md -> work through items -> CHANGELOG.md
 ```
 
-示例项目是一个个人博客。从分阶段规划开始，生成可执行的 TODO，处理中断和阻塞，最后将完成的变更记录为 changelog。
+The sample project is a personal blog. Starting from a phased plan, it generates an actionable TODO, handles interruptions and blockers, and records completed changes as a changelog.
 
-## 1. 从规划开始
+## 1. Start with a plan
 
-[`PLAN.md`](PLAN.md) 描述项目方向：
+[`PLAN.md`](en/PLAN.md) describes the project direction:
 
-- Phase 1：用 Next.js 搭博客，Markdown 文章、布局、响应式页面
-- Phase 2：添加标签、RSS、搜索、暗色模式、SEO
-- Phase 3：部署上线、性能优化、撰写种子文章
+- Phase 1: Build a blog with Next.js — Markdown posts, layout, responsive pages
+- Phase 2: Add tags, RSS, search, dark mode, SEO
+- Phase 3: Deploy, performance optimization, write seed posts
 
-skill 读取这个文件作为上下文。它不会自动改写规划，大方向始终由你掌控。
+The skill reads this file as context. It never modifies the plan — the big picture stays in your hands.
 
-## 2. 生成第一轮 TODO
+## 2. Generate the first TODO round
 
-运行：
+Run:
 
 ```text
 /todo
 ```
 
-skill 检测到没有活跃的 TODO，就会为当前阶段生成具体的执行清单。
+The skill detects there is no active TODO and generates a concrete execution checklist for the current phase.
 
-见 [`TODO-phase1.md`](TODO-phase1.md)：
+See [`TODO-phase1.md`](en/TODO-phase1.md):
 
 ```markdown
 <!-- phase: 1 -->
 
-- [x] 用 create-next-app 初始化项目，配置 TypeScript + Tailwind
-- [x] 搭建基础布局组件：Header、Footer、Layout
-- [x] 实现 Markdown 文件读取工具函数（gray-matter + remark）(depends: 1)
-- [x] 首页文章列表：读取 /posts 目录，按日期倒序展示标题和摘要 (depends: 3)
+- [x] Initialize project with create-next-app, configure TypeScript + Tailwind
+- [x] Build base layout components: Header, Footer, Layout
+- [x] Implement Markdown file reader utility (gray-matter + remark) (depends: 1)
+- [x] Homepage post list: read /posts directory, display titles and excerpts by date (depends: 3)
 ```
 
-生成的 TODO 不只是一个平铺的清单。它可以带阶段标记和依赖提示（如 `(depends: 3)`），让助手知道哪些项应该先做。
+The generated TODO is more than a flat list. It includes phase markers and dependency hints (e.g. `(depends: 3)`), so the assistant knows which items should come first.
 
-## 3. 中断不丢失主线
+## 3. Interruptions without losing the main flow
 
-执行过程中经常会冒出额外的小任务。Smart TODO Flow 把它们作为临时子项插在相关任务下面，而不是替换主线计划：
+Extra small tasks often come up during execution. Smart TODO Flow inserts them as temporary sub-items under the relevant task, instead of replacing the main plan:
 
 ```markdown
-- [x] 代码高亮：集成 rehype-pretty-code (depends: 5)
-  - [x] [temp] 修复代码块在移动端溢出的样式问题
-  - [x] [temp] 顺手把行号显示也加上
+- [x] Code highlighting: integrate rehype-pretty-code (depends: 5)
+  - [x] [temp] Fix code block overflow on mobile
+  - [x] [temp] Add line numbers while at it
 ```
 
-临时工作可见但不会把整个 TODO 变成噪音。
+Temporary work is visible but doesn't turn the entire TODO into noise.
 
-## 4. 带真实状态续接
+## 4. Resume with real state
 
-Phase 2 展示了一个更真实的项目中期状态。见 [`TODO-phase2.md`](TODO-phase2.md)：
+Phase 2 shows a more realistic mid-project state. See [`TODO-phase2.md`](en/TODO-phase2.md):
 
 ```markdown
 <!-- phase: 2 -->
 
-- [-] RSS 订阅：生成 feed.xml (blocked: 还没确定最终的文章 URL 结构，等产品确认)
-- [~] 暗色模式 (skipped: 设计稿还没给暗色配色方案)
-- [ ] SEO 优化：添加 Open Graph meta、生成 sitemap.xml (depends: 4)
+- [-] RSS feed: generate feed.xml (blocked: final post URL structure not decided, waiting for product confirmation)
+- [~] Dark mode (skipped: design team hasn't provided dark color scheme)
+- [ ] SEO optimization: add Open Graph meta, generate sitemap.xml (depends: 4)
 ```
 
-四种状态标记让续接更有用：
+Four status markers make resuming more useful:
 
-- `[ ]` 未开始
-- `[x]` 已完成
-- `[-]` 阻塞，原因写在行内
-- `[~]` 跳过，原因写在行内
+- `[ ]` Not started
+- `[x]` Done
+- `[-]` Blocked, with reason inline
+- `[~]` Skipped, with reason inline
 
-下次回来时，助手可以报告哪些做完了、哪些阻塞了、哪些跳过了、哪些可以继续。
+When you come back next time, the assistant can report what's done, what's blocked, what's skipped, and what can continue.
 
-## 5. 阻塞解除后继续
+## 5. Continue after a blocker is resolved
 
-[`TODO-phase2-resumed.md`](TODO-phase2-resumed.md) 展示 RSS 阻塞解除后同一阶段的状态：
+[`TODO-phase2-resumed.md`](en/TODO-phase2-resumed.md) shows the same phase after the RSS blocker is resolved:
 
 ```markdown
-- [x] RSS 订阅：生成 feed.xml
-  - [x] [temp] 顺便加上 Atom 格式支持
-- [~] 暗色模式 (skipped: 设计稿还没给暗色配色方案)
-- [x] SEO 优化：添加 Open Graph meta、生成 sitemap.xml (depends: 4)
+- [x] RSS feed: generate feed.xml
+  - [x] [temp] Add Atom format support while at it
+- [~] Dark mode (skipped: design team hasn't provided dark color scheme)
+- [x] SEO optimization: add Open Graph meta, generate sitemap.xml (depends: 4)
 ```
 
-因为 SEO 依赖 RSS，RSS 解除阻塞后 SEO 才能安全完成。
+Since SEO depends on RSS, SEO can only be safely completed after the RSS blocker is resolved.
 
-## 6. 完成时记录变更
+## 6. Record changes on completion
 
-每完成一项就会记录到 [`CHANGELOG.md`](CHANGELOG.md)：
+Each completed item is recorded in [`CHANGELOG.md`](en/CHANGELOG.md):
 
 ```markdown
-## 2026-05-28 (Phase 2 收尾)
-- add RSS feed.xml + Atom 格式支持
-- add Open Graph meta 标签
-- add sitemap.xml 自动生成
+## 2026-05-28 (Phase 2 wrap-up)
+- add RSS feed.xml + Atom format support
+- add Open Graph meta tags
+- add sitemap.xml auto-generation
 ```
 
-最终形成一套小而持久的项目记忆：
+This forms a small but persistent project memory:
 
-- `PLAN.md` 保存方向
-- `TODO.md` 追踪当前执行状态
-- `CHANGELOG.md` 记录实际变更
+- `PLAN.md` stores the direction
+- `TODO.md` tracks the current execution state
+- `CHANGELOG.md` records actual changes
 
-这就是核心价值：关掉会话，下次回来运行 `/todo`，从可读的项目状态继续，而不是从头重建上下文。
+This is the core value: close the session, come back later, run `/todo`, and resume from readable project state — instead of rebuilding context from scratch.

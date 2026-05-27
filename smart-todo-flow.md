@@ -100,6 +100,8 @@ Only warn — user decides whether to proceed or switch.
 
 ## Claude Task Integration
 
+TaskCreate and TaskUpdate are deferred tools — load them via `ToolSearch` (query: `select:TaskCreate,TaskUpdate`) before first use.
+
 When starting work on a TODO item:
 1. Create a Claude Task via `TaskCreate` with the item description as subject
 2. Set the task to `in_progress`
@@ -309,16 +311,26 @@ Triggered only by user (e.g. "clear todo"). After clearing, TODO.md retains only
 
 Triggered only by user (e.g. "commit").
 
-Commit message format: first read the project's recent git log and follow existing style. If no clear style exists, use the default template:
+Commit message format: first read the project's recent git log and follow existing style. If no clear style exists, use the default format:
 
 ```
-<verb> <subject>: <detail>
+<summary>: <keyword1>/<keyword2>/<keyword3>
+  - <specific change 1>
+  - <specific change 2>
 ```
 
+- First line: `<verb> <summary>: <key changes separated by />`
 - Verbs: add / fix / optimize / refactor / update / remove, etc.
-- `<detail>` must be specific enough to understand the change without reading the diff — list what was added/changed/fixed, not just a category summary
+- Body (when 2+ changes): each change one bullet `- <specific detail>`
+- Each bullet must be specific enough to understand the change without reading the diff
 - Include quantified results when available (e.g. `match rate 49% → 54.7%`)
-- Single-line summary, no multi-line body (unless changes are substantial)
+
+Example:
+```
+fix 四项质量修复: 坐标缩放/异显误判/mark路径/过检治理
+  - GT 坐标按来源图片尺寸单独缩放, 修复 mark 标注图尺寸不一致导致的匹配偏差
+  - min_abnormal_patterns 1→2, 减少 Mura 被误判为异显
+```
 
 # Important Rules
 

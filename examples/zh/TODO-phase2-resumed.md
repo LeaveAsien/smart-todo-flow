@@ -2,9 +2,9 @@
 
 <!-- phase: 2 -->
 
-> This example shows what Phase 2 looks like after resuming:
-> the RSS block was resolved, dark mode is still skipped,
-> and SEO (which depended on RSS) can now proceed.
+> 这个示例展示 Phase 2 续接后的状态：
+> RSS 阻塞已解除，暗色模式仍然跳过，
+> SEO（依赖 RSS）现在可以继续了。
 
 - [x] 文章 frontmatter 增加 tags 字段，解析并收集所有标签
 - [x] 标签页 /tags/[tag]：列出该标签下的所有文章 (depends: 1)

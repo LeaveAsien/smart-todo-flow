@@ -90,7 +90,7 @@ skill 把规划转化为执行状态：
 - add sitemap.xml 自动生成
 ```
 
-完整示例见 [`examples/`](examples/README.md)。
+完整示例见 [`examples/`](examples/README.zh-CN.md)。
 
 ## 安装
 
