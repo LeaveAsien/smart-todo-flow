@@ -103,15 +103,15 @@ Two parts, both needed for the full experience:
 ```bash
 # macOS / Linux
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md \
-  -o ~/.claude/skills/smart-todo-flow.md --create-dirs
+  -o ~/.claude/skills/todo.md --create-dirs
 
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force ~/.claude/skills | Out-Null
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md" `
-  -OutFile "$HOME/.claude/skills/smart-todo-flow.md"
+  -OutFile "$HOME/.claude/skills/todo.md"
 ```
 
-**Or manually:** download [`smart-todo-flow.md`](smart-todo-flow.md) and place it in `~/.claude/skills/`.
+**Or manually:** download [`smart-todo-flow.md`](smart-todo-flow.md) and save it as `~/.claude/skills/todo.md`.
 
 ### 2. Add rules to your project's CLAUDE.md
 

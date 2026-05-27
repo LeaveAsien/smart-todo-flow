@@ -103,15 +103,15 @@ skill 把规划转化为执行状态：
 ```bash
 # macOS / Linux
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md \
-  -o ~/.claude/skills/smart-todo-flow.md --create-dirs
+  -o ~/.claude/skills/todo.md --create-dirs
 
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force ~/.claude/skills | Out-Null
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md" `
-  -OutFile "$HOME/.claude/skills/smart-todo-flow.md"
+  -OutFile "$HOME/.claude/skills/todo.md"
 ```
 
-**手动安装：** 下载 [`smart-todo-flow.md`](smart-todo-flow.md) 放到 `~/.claude/skills/` 目录。
+**手动安装：** 下载 [`smart-todo-flow.md`](smart-todo-flow.md)，保存为 `~/.claude/skills/todo.md`。
 
 ### 2. 在项目的 CLAUDE.md 中添加规则
 
