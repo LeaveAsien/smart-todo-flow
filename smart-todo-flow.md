@@ -158,11 +158,13 @@ The `<!-- phase: N -->` comment tracks which PLAN phase this TODO round correspo
 
 User may:
 - Specify one or several items to work on
-- Say "finish all" to execute all remaining items
-- Say "next" to do just one item
+- Say "next" to do just one item (default, cache-friendly)
+- Say "finish all" to execute all remaining items in one turn (⚠️ higher token cost — no prompt cache between items)
 - Pick their own order
 - Mark an item as blocked: "item 3 is blocked because..."
 - Mark an item as skipped: "skip item 4"
+
+**Default pacing**: after completing each item, pause and report progress, then wait for user input before continuing. This leverages prompt cache at turn boundaries and significantly reduces token consumption. "finish all" opts out of this pacing.
 
 ## Dependency Check
 
@@ -209,6 +211,7 @@ After completing an item:
 2. Update the Claude Task to `completed` via `TaskUpdate`
 3. Append to CHANGELOG.md under the current batch (see Changelog Rules below)
 4. If all actionable items are done (only `[x]`, `[-]`, `[~]` remain — no `[ ]`), notify the user: TODO is fully completed, review results and decide next steps
+5. **If not "finish all" mode**: pause, report brief progress (e.g. "3/7 done"), and wait for user to say "next" / "continue" before proceeding to the next item
 
 Do not include completion dates in TODO.md (keep it minimal).
 
@@ -239,6 +242,9 @@ When all actionable items in TODO.md are resolved (no `[ ]` remaining — only `
 ```
 All TODOs resolved! (N done, M blocked, K skipped)
 Changes have been recorded in CHANGELOG.md.
+
+💡 Remember to update PLAN.md — mark Phase N as completed (e.g. add ✅)
+
 You can:
 1. Review/edit the status of blocked/skipped items
 2. Review/revise CHANGELOG.md
@@ -247,7 +253,7 @@ You can:
 5. Generate next phase TODO from PLAN (Phase N → Phase N+1)
 ```
 
-Option 4 only appears if the project is a git repository. Option 5 only appears if PLAN.md exists and has a subsequent phase. These operations are independent. User can execute them in any order or skip any.
+Option 4 only appears if the project is a git repository. Option 5 only appears if PLAN.md exists and has a subsequent phase. The PLAN update reminder only appears if TODO.md has a `<!-- phase: N -->` marker and PLAN.md exists. These operations are independent. User can execute them in any order or skip any.
 
 # Clear TODO
 

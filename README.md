@@ -140,8 +140,8 @@ The skill detects the current state automatically:
 | What you say | What happens |
 |-------------|-------------|
 | `/todo` | Check status or generate TODO |
-| `next` / `continue` / `keep going` | Do the next item |
-| `finish all` | Execute all remaining items |
+| `next` / `continue` / `keep going` | Do the next item (default, cache-friendly) |
+| `finish all` | Execute all remaining items in one turn (higher token cost) |
 | `do item 3` | Work on a specific item |
 | `item 3 is blocked because...` | Mark as blocked `[-]` with reason |
 | `skip item 4` | Mark as skipped `[~]` |
