@@ -2,13 +2,13 @@
 
 # Smart TODO Flow
 
-A Claude Code skill that adds a lightweight execution memory layer for AI-assisted coding sessions, built around three linked documents: **PLAN.md** → **TODO.md** → **CHANGELOG.md**.
+A multi-version AI coding skill that adds a lightweight execution memory layer for Claude Code and Codex sessions, built around three linked documents: **PLAN.md** → **TODO.md** → **CHANGELOG.md**.
 
 Keep the big-picture plan, step-by-step execution, and changelog in sync across conversations.
 
 ## Why
 
-Claude Code is powerful, but AI-assisted coding sessions have a few recurring workflow gaps:
+AI coding assistants are powerful, but long-running coding sessions have a few recurring workflow gaps:
 
 - **No persistent execution memory** — close the chat, and the next session may lose what's done, what's left, and why
 - **Plan and execution drift apart** — a high-level PLAN.md can exist, but implementation often turns into scattered ad-hoc steps
@@ -92,42 +92,86 @@ As items are completed, the changelog is updated incrementally:
 
 See the full walkthrough in [`examples/`](examples/README.md).
 
+## Versions
+
+| Version | Skill file | Project rules template |
+|---------|------------|------------------------|
+| Claude Code | [`claude/smart-todo-flow.md`](claude/smart-todo-flow.md) | [`claude/claude-md-template.md`](claude/claude-md-template.md) |
+| Codex | [`codex/todo/SKILL.md`](codex/todo/SKILL.md) | [`codex/agents-md-template.md`](codex/agents-md-template.md) |
+
 ## Install
 
-Two parts, both needed for the full experience:
+Choose the version for your AI coding assistant. Each version has two parts, both needed for the full experience:
 
-### 1. Add the skill file
+### Claude Code
+
+#### 1. Add the skill file
 
 **Quick install (one command):**
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md \
+mkdir -p ~/.claude/skills
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/claude/smart-todo-flow.md \
   -o ~/.claude/skills/todo.md --create-dirs
 
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force ~/.claude/skills | Out-Null
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md" `
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/claude/smart-todo-flow.md" `
   -OutFile "$HOME/.claude/skills/todo.md"
 ```
 
-**Or manually:** download [`smart-todo-flow.md`](smart-todo-flow.md) and save it as `~/.claude/skills/todo.md`.
+**Or manually:** download [`claude/smart-todo-flow.md`](claude/smart-todo-flow.md) and save it as `~/.claude/skills/todo.md`.
 
-### 2. Add rules to your project's CLAUDE.md
+#### 2. Add rules to your project's CLAUDE.md
 
-Paste the content from [`claude-md-template.en.md`](claude-md-template.en.md) into your project's `CLAUDE.md` file.
+Paste the content from [`claude/claude-md-template.md`](claude/claude-md-template.md) into your project's `CLAUDE.md` file.
 
 This enables always-on behaviors (like writing changelog after every change) even outside of `/todo` sessions. Without it, these rules only apply when the skill is actively invoked.
 
 > **Why both?** The skill handles interactive operations (`/todo` → generate, resume, phase flow). The CLAUDE.md rules handle always-on behaviors (write changelog on every change, guide planning content to PLAN.md). Skill alone = changelog only written during `/todo`. Template alone = no `/todo` command. Together = full workflow.
 
+### Codex
+
+#### 1. Add the skill folder
+
+**Quick install (one command):**
+
+```bash
+# macOS / Linux
+mkdir -p ~/.codex/skills/todo/agents
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md \
+  -o ~/.codex/skills/todo/SKILL.md
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml \
+  -o ~/.codex/skills/todo/agents/openai.yaml
+
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force "$HOME/.codex/skills/todo/agents" | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md" `
+  -OutFile "$HOME/.codex/skills/todo/SKILL.md"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml" `
+  -OutFile "$HOME/.codex/skills/todo/agents/openai.yaml"
+```
+
+**Or manually:** copy the [`codex/todo/`](codex/todo/) folder into `~/.codex/skills/todo/`.
+
+#### 2. Add rules to your project's AGENTS.md or AGENT.md
+
+Paste the content from [`codex/agents-md-template.md`](codex/agents-md-template.md) into your project's `AGENTS.md` or `AGENT.md` file.
+
+This enables always-on behaviors (like writing changelog after every change) even outside of `/todo` sessions. Without it, these rules only apply when the skill is actively invoked.
+
 ## Usage
 
 ### Start
 
+For both Claude Code and Codex, start with:
+
 ```
 /todo
 ```
+
+In Codex, `/todo` is the recommended natural trigger for the `todo` skill. If your Codex environment does not pick it up, explicitly invoke it with `Use $todo`.
 
 The skill detects the current state automatically:
 
@@ -164,6 +208,7 @@ The skill detects the current state automatically:
 - **Smart git detection** — on resume, compares recent commits against unchecked items and suggests which ones might already be done (never auto-marks, always asks)
 - **Incremental changelog** — writes to CHANGELOG.md immediately on each item completion, not after the fact; batches by git commit (or by TODO round if no git)
 - **Temporary tasks** — interrupt the flow with `[temp]` sub-tasks without losing your place in the main line
+- **Codex plan mirror** — the Codex version can mirror active TODO items into the session plan while keeping TODO.md as the durable source
 - **No-git support** — works in projects without git; git-dependent features (smart detection, commit) are skipped gracefully
 
 ## Where does PLAN.md come from?
@@ -171,15 +216,15 @@ The skill detects the current state automatically:
 This skill **reads PLAN.md but does not generate it**. You have a few options:
 
 - **Write it yourself** — just a markdown file with your goals and phases, no special format required
-- **Use another skill or brainstorm session** — let Claude help you think through directions, then save the result as PLAN.md
+- **Use another skill or brainstorm session** — let your assistant help you think through directions, then save the result as PLAN.md
 - **Skip it** — when no PLAN.md exists, the skill asks how you'd like to proceed; you can just tell it what to do directly
 
-That said, having a PLAN.md significantly improves the experience — it gives Claude a north star to generate better TODOs and prevents getting lost in details.
+That said, having a PLAN.md significantly improves the experience — it gives the assistant a north star to generate better TODOs and prevents getting lost in details.
 
 ## FAQ
 
 **Q: I installed the skill but changelog isn't being written outside of `/todo` sessions.**
-A: You need to also paste the template from `claude-md-template.en.md` into your project's CLAUDE.md. The skill only activates when you call `/todo`; the CLAUDE.md rules are what make changelog writing always-on.
+A: You need to also paste the matching project rules template into your project: `claude/claude-md-template.md` for Claude Code, or `codex/agents-md-template.md` for Codex. The skill only activates when you call `/todo`; the project rules make changelog writing always-on.
 
 **Q: Can I use this without git?**
 A: Yes. Git-dependent features (smart detection of completed work, commit option, commit-based changelog batching) are automatically skipped. Changelog batches by TODO round instead.

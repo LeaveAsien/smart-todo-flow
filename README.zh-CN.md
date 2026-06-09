@@ -2,13 +2,13 @@
 
 # Smart TODO Flow
 
-一个 Claude Code skill，为 AI 辅助编程会话提供轻量的执行记忆层，围绕三份联动文档构建：**PLAN.md** → **TODO.md** → **CHANGELOG.md**。
+一个多版本 AI 编程 skill，为 Claude Code 和 Codex 会话提供轻量的执行记忆层，围绕三份联动文档构建：**PLAN.md** → **TODO.md** → **CHANGELOG.md**。
 
 让大方向规划、逐步执行和变更记录在多次对话之间保持同步。
 
 ## 为什么需要
 
-Claude Code 很强大，但 AI 辅助编程会话有几个反复出现的工作流痛点：
+AI 编程助手很强大，但长时间编程会话有几个反复出现的工作流痛点：
 
 - **没有持久的执行记忆** — 关掉对话，下次打开可能丢失哪些做了、哪些没做、为什么这么做
 - **规划和执行容易脱节** — PLAN.md 可以写好大方向，但实际执行经常变成零散的临时步骤
@@ -92,42 +92,86 @@ skill 把规划转化为执行状态：
 
 完整示例见 [`examples/`](examples/README.zh-CN.md)。
 
+## 版本
+
+| 版本 | Skill 文件 | 项目规则模板 |
+|------|------------|--------------|
+| Claude Code | [`claude/smart-todo-flow.md`](claude/smart-todo-flow.md) | [`claude/claude-md-template.zh-CN.md`](claude/claude-md-template.zh-CN.md) |
+| Codex | [`codex/todo/SKILL.md`](codex/todo/SKILL.md) | [`codex/agents-md-template.zh-CN.md`](codex/agents-md-template.zh-CN.md) |
+
 ## 安装
 
-需要两部分，搭配使用才能获得完整体验：
+按你使用的 AI 编程助手选择对应版本。每个版本都需要两部分，搭配使用才能获得完整体验：
 
-### 1. 添加 skill 文件
+### Claude Code
+
+#### 1. 添加 skill 文件
 
 **一键安装：**
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md \
+mkdir -p ~/.claude/skills
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/claude/smart-todo-flow.md \
   -o ~/.claude/skills/todo.md --create-dirs
 
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force ~/.claude/skills | Out-Null
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/smart-todo-flow.md" `
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/claude/smart-todo-flow.md" `
   -OutFile "$HOME/.claude/skills/todo.md"
 ```
 
-**手动安装：** 下载 [`smart-todo-flow.md`](smart-todo-flow.md)，保存为 `~/.claude/skills/todo.md`。
+**手动安装：** 下载 [`claude/smart-todo-flow.md`](claude/smart-todo-flow.md)，保存为 `~/.claude/skills/todo.md`。
 
-### 2. 在项目的 CLAUDE.md 中添加规则
+#### 2. 在项目的 CLAUDE.md 中添加规则
 
-把 [`claude-md-template.md`](claude-md-template.md) 的内容粘贴到你项目的 `CLAUDE.md` 文件中。
+把 [`claude/claude-md-template.zh-CN.md`](claude/claude-md-template.zh-CN.md) 的内容粘贴到你项目的 `CLAUDE.md` 文件中。
 
 这样即使不在 `/todo` 会话中，也能启用常驻行为（如每次改动自动写 changelog）。否则这些规则只在调用 `/todo` 时生效。
 
 > **为什么需要两部分？** skill 负责交互操作（`/todo` → 生成、续接、阶段流转）。CLAUDE.md 规则负责常驻行为（每次改动写 changelog、引导规划内容到 PLAN.md）。只装 skill = changelog 仅在 `/todo` 期间写入。只贴模板 = 没有 `/todo` 命令。两者搭配 = 完整工作流。
 
+### Codex
+
+#### 1. 添加 skill 目录
+
+**一键安装：**
+
+```bash
+# macOS / Linux
+mkdir -p ~/.codex/skills/todo/agents
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md \
+  -o ~/.codex/skills/todo/SKILL.md
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml \
+  -o ~/.codex/skills/todo/agents/openai.yaml
+
+# Windows (PowerShell)
+New-Item -ItemType Directory -Force "$HOME/.codex/skills/todo/agents" | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md" `
+  -OutFile "$HOME/.codex/skills/todo/SKILL.md"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml" `
+  -OutFile "$HOME/.codex/skills/todo/agents/openai.yaml"
+```
+
+**手动安装：** 把 [`codex/todo/`](codex/todo/) 目录复制到 `~/.codex/skills/todo/`。
+
+#### 2. 在项目的 AGENTS.md 或 AGENT.md 中添加规则
+
+把 [`codex/agents-md-template.zh-CN.md`](codex/agents-md-template.zh-CN.md) 的内容粘贴到你项目的 `AGENTS.md` 或 `AGENT.md` 文件中。
+
+这样即使不在 `/todo` 会话中，也能启用常驻行为（如每次改动自动写 changelog）。否则这些规则只在调用 `/todo` 时生效。
+
 ## 使用方法
 
 ### 开始
 
+Claude Code 和 Codex 都推荐从这里开始：
+
 ```
 /todo
 ```
+
+在 Codex 中，`/todo` 是 `todo` skill 的推荐自然触发词。如果你的 Codex 环境没有识别它，可以显式输入 `使用 $todo`。
 
 skill 自动检测当前状态：
 
@@ -164,6 +208,7 @@ skill 自动检测当前状态：
 - **智能 git 检测** — 续接时对比近期 commit 和未完成项，建议哪些可能已完成（仅建议，不自动标记）
 - **增量 changelog** — 每完成一项立即写入 CHANGELOG.md，有 git 按 commit 分批，无 git 按 TODO 轮次分批
 - **临时任务** — 用 `[temp]` 子任务中断主线，完成后自动回到主流程
+- **Codex 任务面板镜像** — Codex 版可把当前 TODO 同步到会话 plan 面板，同时仍以 TODO.md 作为持久状态源
 - **无 git 支持** — 没有 git 的项目也能用，git 相关功能（智能检测、提交）自动跳过
 
 ## PLAN.md 从哪来？
@@ -171,15 +216,15 @@ skill 自动检测当前状态：
 这个 skill **只读取 PLAN.md，不会生成或修改它**。你可以：
 
 - **自己写** — 就是一个 markdown 文件，写上目标和阶段，没有格式要求
-- **用其他 skill 或头脑风暴** — 让 Claude 帮你梳理方向，然后保存为 PLAN.md
+- **用其他 skill 或头脑风暴** — 让 AI 助手帮你梳理方向，然后保存为 PLAN.md
 - **不写** — 没有 PLAN.md 时，skill 会问你怎么做；你可以直接告诉它要做什么
 
-不过有 PLAN.md 会明显改善体验——给 Claude 一个大方向，生成的 TODO 更靠谱，也不容易在细节里迷失。
+不过有 PLAN.md 会明显改善体验——给 AI 助手一个大方向，生成的 TODO 更靠谱，也不容易在细节里迷失。
 
 ## 常见问题
 
 **问：装了 skill 但 `/todo` 之外不写 changelog。**
-答：还需要把 `claude-md-template.md` 的内容粘贴到项目的 CLAUDE.md 里。skill 只在调用 `/todo` 时激活，CLAUDE.md 规则才是让 changelog 常驻写入的关键。
+答：还需要把对应的项目规则模板粘贴到项目中：Claude Code 用 `claude/claude-md-template.zh-CN.md`，Codex 用 `codex/agents-md-template.zh-CN.md`。skill 只在调用 `/todo` 时激活，项目规则才是让 changelog 常驻写入的关键。
 
 **问：没有 git 能用吗？**
 答：可以。git 相关功能（智能检测已完成工作、提交选项、按 commit 分批 changelog）会自动跳过。changelog 改为按 TODO 轮次分批。

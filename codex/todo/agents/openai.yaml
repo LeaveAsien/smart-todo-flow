@@ -1,0 +1,4 @@
+interface:
+  display_name: "todo"
+  short_description: "Smart TODO Flow for PLAN/TODO/changelog"
+  default_prompt: "/todo - generate or resume TODO.md from PLAN.md and keep CHANGELOG.md updated."
