@@ -1,0 +1,19 @@
+{
+  "name": "smart-todo-flow",
+  "displayName": "Smart TODO Flow",
+  "description": "Lightweight state-machine for task management, chaining PLAN.md → TODO.md → CHANGELOG.md",
+  "author": {
+    "name": "LeaveAsien",
+    "email": "leavea.for.ytb@gmail.com"
+  },
+  "repository": "https://github.com/LeaveAsien/smart-todo-flow",
+  "license": "MIT",
+  "keywords": [
+    "todo",
+    "task-management",
+    "state-machine",
+    "workflow",
+    "plan",
+    "changelog"
+  ]
+}

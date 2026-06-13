@@ -1,5 +1,5 @@
 ---
-name: smart-todo-flow
+name: todo
 description: >-
   Smart TODO state machine management. Chains PLAN.md → TODO.md → CHANGELOG.md.
   Reads PLAN and project context to generate/resume TODOs, supports temporary
