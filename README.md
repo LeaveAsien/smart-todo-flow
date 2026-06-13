@@ -106,13 +106,18 @@ See the full walkthrough in [`examples/`](examples/README.md).
 
 One command, everything auto-configured — skills, hooks, `/todo-status`:
 
+```bash
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/install.sh | bash
 ```
-/plugin add github:LeaveAsien/smart-todo-flow
+
+Or manually:
+
+```bash
+claude plugin marketplace add github:LeaveAsien/smart-todo-flow
+claude plugin install smart-todo-flow
 ```
 
 No CLAUDE.md modification needed. The plugin's SessionStart hook automatically injects workflow rules into every session.
-
-**Local testing:** `claude --plugin-dir /path/to/smart-todo-flow`
 
 ### Claude Code — Manual
 

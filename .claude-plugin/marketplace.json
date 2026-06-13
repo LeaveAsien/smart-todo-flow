@@ -1,0 +1,16 @@
+{
+  "name": "smart-todo-flow",
+  "description": "Lightweight state-machine for task management: PLAN.md → TODO.md → CHANGELOG.md",
+  "owner": {
+    "name": "LeaveAsien",
+    "email": "leavea.for.ytb@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "smart-todo-flow",
+      "description": "Smart TODO state machine for AI coding sessions",
+      "version": "2.0.0",
+      "source": "./"
+    }
+  ]
+}
