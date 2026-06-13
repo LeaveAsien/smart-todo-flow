@@ -96,32 +96,39 @@ See the full walkthrough in [`examples/`](examples/README.md).
 
 | Version | Skill file | Project rules template |
 |---------|------------|------------------------|
-| Claude Code | [`claude/smart-todo-flow.md`](claude/smart-todo-flow.md) | [`claude/claude-md-template.md`](claude/claude-md-template.md) |
+| Claude Code (Plugin) | [`skills/todo/SKILL.md`](skills/todo/SKILL.md) | Not needed (hooks auto-inject) |
+| Claude Code (Manual) | [`skills/todo/SKILL.md`](skills/todo/SKILL.md) | [`claude/claude-md-template.md`](claude/claude-md-template.md) |
 | Codex | [`codex/todo/SKILL.md`](codex/todo/SKILL.md) | [`codex/agents-md-template.md`](codex/agents-md-template.md) |
 
 ## Install
 
-Choose the version for your AI coding assistant. Each version has two parts, both needed for the full experience:
+### Claude Code — Plugin (Recommended)
 
-### Claude Code
+One command, everything auto-configured — skill, hooks, `/todo-status`:
+
+```bash
+claude plugin install smart-todo-flow@LeaveAsien/smart-todo-flow
+```
+
+No CLAUDE.md modification needed. The plugin's SessionStart hook automatically injects workflow rules into every session.
+
+### Claude Code — Manual
+
+If you prefer not to use the plugin system:
 
 #### 1. Add the skill file
-
-**Quick install (one command):**
 
 ```bash
 # macOS / Linux
 mkdir -p ~/.claude/skills
-curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/claude/smart-todo-flow.md \
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/skills/todo/SKILL.md \
   -o ~/.claude/skills/todo.md --create-dirs
 
 # Windows (PowerShell)
 New-Item -ItemType Directory -Force ~/.claude/skills | Out-Null
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/claude/smart-todo-flow.md" `
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/skills/todo/SKILL.md" `
   -OutFile "$HOME/.claude/skills/todo.md"
 ```
-
-**Or manually:** download [`claude/smart-todo-flow.md`](claude/smart-todo-flow.md) and save it as `~/.claude/skills/todo.md`.
 
 #### 2. Add rules to your project's CLAUDE.md
 
@@ -129,7 +136,7 @@ Paste the content from [`claude/claude-md-template.md`](claude/claude-md-templat
 
 This enables always-on behaviors (like writing changelog after every change) even outside of `/todo` sessions. Without it, these rules only apply when the skill is actively invoked.
 
-> **Why both?** The skill handles interactive operations (`/todo` → generate, resume, phase flow). The CLAUDE.md rules handle always-on behaviors (write changelog on every change, guide planning content to PLAN.md). Skill alone = changelog only written during `/todo`. Template alone = no `/todo` command. Together = full workflow.
+> **Why the extra step?** Manual install doesn't include hooks, so the CLAUDE.md template is needed for always-on behaviors. The plugin install skips this because hooks handle it automatically.
 
 ### Codex
 
@@ -184,6 +191,7 @@ The skill detects the current state automatically:
 | What you say | What happens |
 |-------------|-------------|
 | `/todo` | Check status or generate TODO |
+| `/todo-status` | Show progress locally, zero token cost (plugin only) |
 | `next` / `continue` / `keep going` | Do the next item (default, cache-friendly) |
 | `finish all` | Execute all remaining items in one turn (higher token cost) |
 | `do item 3` | Work on a specific item |
@@ -224,7 +232,7 @@ That said, having a PLAN.md significantly improves the experience — it gives t
 ## FAQ
 
 **Q: I installed the skill but changelog isn't being written outside of `/todo` sessions.**
-A: You need to also paste the matching project rules template into your project: `claude/claude-md-template.md` for Claude Code, or `codex/agents-md-template.md` for Codex. The skill only activates when you call `/todo`; the project rules make changelog writing always-on.
+A: If using the plugin install, this should work automatically via the SessionStart hook. If using manual install, you need to paste the project rules template into your CLAUDE.md: [`claude/claude-md-template.md`](claude/claude-md-template.md) for Claude Code, or [`codex/agents-md-template.md`](codex/agents-md-template.md) for Codex.
 
 **Q: Can I use this without git?**
 A: Yes. Git-dependent features (smart detection of completed work, commit option, commit-based changelog batching) are automatically skipped. Changelog batches by TODO round instead.
