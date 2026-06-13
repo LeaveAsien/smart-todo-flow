@@ -267,25 +267,28 @@ Triggered only by user (e.g. "clear todo"). After clearing, TODO.md retains only
 
 Triggered only by user (e.g. "commit").
 
-Commit message format: first read the project's recent git log and follow existing style. If no clear style exists, use the default format:
+Commit message format: **Conventional Commits** specification. First read the project's recent git log — if the project already uses a different convention, follow that instead.
 
 ```
-<summary>: <keyword1>/<keyword2>/<keyword3>
-  - <specific change 1>
-  - <specific change 2>
+<type>(<scope>): <description>
+
+- <specific change 1>
+- <specific change 2>
 ```
 
-- First line: `<verb> <summary>: <key changes separated by />`
-- Verbs: add / fix / optimize / refactor / update / remove, etc.
-- Body (when 2+ changes): each change one bullet `- <specific detail>`
+- First line ≤ 72 characters
+- Types: `feat` / `fix` / `docs` / `refactor` / `chore` / `test` / `style` / `perf`
+- Scope: optional, the module or area affected (e.g. `skill`, `hooks`, `plugin`)
+- Body (when 2+ changes): blank line after first line, each change one bullet
 - Each bullet must be specific enough to understand the change without reading the diff
 - Include quantified results when available (e.g. `match rate 49% → 54.7%`)
 
 Example:
 ```
-fix 四项质量修复: 坐标缩放/异显误判/mark路径/过检治理
-  - GT 坐标按来源图片尺寸单独缩放, 修复 mark 标注图尺寸不一致导致的匹配偏差
-  - min_abnormal_patterns 1→2, 减少 Mura 被误判为异显
+fix(plugin): 修正安装命令路径
+
+- plugin.json 添加 version 2.0.0, 消除验证警告
+- 双语 README 安装命令修正为 /plugin add github:LeaveAsien/smart-todo-flow
 ```
 
 # Reference
