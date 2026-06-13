@@ -106,11 +106,13 @@ skill 把规划转化为执行状态：
 
 一条命令，全部自动配置 — skill、hooks、`/todo-status`：
 
-```bash
-claude plugin install smart-todo-flow@LeaveAsien/smart-todo-flow
+```
+/plugin add github:LeaveAsien/smart-todo-flow
 ```
 
 无需修改 CLAUDE.md。插件的 SessionStart hook 会自动在每次会话开始时注入工作流规则。
+
+**本地测试：** `claude --plugin-dir /path/to/smart-todo-flow`
 
 ### Claude Code — 手动安装
 
