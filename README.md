@@ -94,20 +94,29 @@ See the full walkthrough in [`examples/`](examples/README.md).
 
 ## Versions
 
-| Version | Skill file | Project rules template |
-|---------|------------|------------------------|
-| Claude Code (Plugin) | [`skills/todo/SKILL.md`](skills/todo/SKILL.md) | Not needed (hooks auto-inject) |
-| Claude Code (Manual) | [`skills/todo/SKILL.md`](skills/todo/SKILL.md) | [`claude/claude-md-template.md`](claude/claude-md-template.md) |
-| Codex | [`codex/todo/SKILL.md`](codex/todo/SKILL.md) | [`codex/agents-md-template.md`](codex/agents-md-template.md) |
+| Version | Skills | Project rules template |
+|---------|--------|------------------------|
+| Claude Code (Plugin) | [`todo`](skills/todo/SKILL.md), [`handoff`](skills/handoff/SKILL.md) | Not needed (hooks auto-inject) |
+| Claude Code (Manual) | [`todo`](skills/todo/SKILL.md) | [`claude/claude-md-template.md`](claude/claude-md-template.md) |
+| Codex | [`todo`](codex/todo/SKILL.md) | [`codex/agents-md-template.md`](codex/agents-md-template.md) |
 
 ## Install
 
 ### Claude Code — Plugin (Recommended)
 
-One command, everything auto-configured — skill, hooks, `/todo-status`:
+One command, everything auto-configured — skills, hooks, `/todo-status`:
+
+**In Claude Code (interactive):**
 
 ```
 /plugin add github:LeaveAsien/smart-todo-flow
+```
+
+**In Shell (two steps):**
+
+```bash
+claude plugin marketplace add github:LeaveAsien/smart-todo-flow
+claude plugin install smart-todo-flow
 ```
 
 No CLAUDE.md modification needed. The plugin's SessionStart hook automatically injects workflow rules into every session.
@@ -194,6 +203,7 @@ The skill detects the current state automatically:
 |-------------|-------------|
 | `/todo` | Check status or generate TODO |
 | `/todo-status` | Show progress locally, zero token cost (plugin only) |
+| `/handoff` | Generate HANDOFF.md for session context handoff (plugin only) |
 | `next` / `continue` / `keep going` | Do the next item (default, cache-friendly) |
 | `finish all` | Execute all remaining items in one turn (higher token cost) |
 | `do item 3` | Work on a specific item |
@@ -201,6 +211,7 @@ The skill detects the current state automatically:
 | `skip item 4` | Mark as skipped `[~]` |
 | `insert a temp task: fix the typo` | Add a temporary sub-task without disrupting the main flow |
 | `clear todo` | Clear TODO.md for the next round |
+| `commit` | Commit with Conventional Commits format |
 
 ### Task states
 
@@ -218,6 +229,9 @@ The skill detects the current state automatically:
 - **Smart git detection** — on resume, compares recent commits against unchecked items and suggests which ones might already be done (never auto-marks, always asks)
 - **Incremental changelog** — writes to CHANGELOG.md immediately on each item completion, not after the fact; batches by git commit (or by TODO round if no git)
 - **Temporary tasks** — interrupt the flow with `[temp]` sub-tasks without losing your place in the main line
+- **Session handoff** — `/handoff` generates a HANDOFF.md capturing pending decisions, design rationale, and implicit knowledge that would be lost between sessions; built from conversation context without extra token cost
+- **Conventional Commits** — git commit messages follow `<type>(<scope>): <description>` format (`feat`, `fix`, `docs`, `refactor`, `chore`, etc.)
+- **Hooks automation** (plugin only) — SessionStart injects workflow rules, PostToolUse reminds changelog updates, UserPromptSubmit powers `/todo-status` at zero token cost
 - **Codex plan mirror** — the Codex version can mirror active TODO items into the session plan while keeping TODO.md as the durable source
 - **No-git support** — works in projects without git; git-dependent features (smart detection, commit) are skipped gracefully
 
@@ -244,6 +258,12 @@ A: Never. It only reads PLAN.md to understand your goals and phases. If the plan
 
 **Q: What if my PLAN.md doesn't use "Phase 1, Phase 2" format?**
 A: The skill recognizes various formats — "Phase", "Stage", "Step", numbered sections, Chinese equivalents like "第一阶段". If there's no phase structure at all, it treats the whole plan as one phase.
+
+**Q: What's the difference between `/todo-status` and `/todo`?**
+A: `/todo-status` runs locally via a hook script — it shows progress without sending anything to the API (zero token cost). `/todo` invokes the full skill for interactive task management.
+
+**Q: What does `/handoff` capture that TODO and CHANGELOG don't?**
+A: Pending decisions, design rationale, brainstorming ideas, and implicit knowledge from the conversation — things that exist only in the chat and would be lost when switching sessions.
 
 ## License
 

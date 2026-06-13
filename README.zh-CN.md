@@ -94,20 +94,29 @@ skill 把规划转化为执行状态：
 
 ## 版本
 
-| 版本 | Skill 文件 | 项目规则模板 |
-|------|------------|--------------|
-| Claude Code（插件） | [`skills/todo/SKILL.md`](skills/todo/SKILL.md) | 不需要（hooks 自动注入） |
-| Claude Code（手动） | [`skills/todo/SKILL.md`](skills/todo/SKILL.md) | [`claude/claude-md-template.zh-CN.md`](claude/claude-md-template.zh-CN.md) |
-| Codex | [`codex/todo/SKILL.md`](codex/todo/SKILL.md) | [`codex/agents-md-template.zh-CN.md`](codex/agents-md-template.zh-CN.md) |
+| 版本 | Skills | 项目规则模板 |
+|------|--------|--------------|
+| Claude Code（插件） | [`todo`](skills/todo/SKILL.md), [`handoff`](skills/handoff/SKILL.md) | 不需要（hooks 自动注入） |
+| Claude Code（手动） | [`todo`](skills/todo/SKILL.md) | [`claude/claude-md-template.zh-CN.md`](claude/claude-md-template.zh-CN.md) |
+| Codex | [`todo`](codex/todo/SKILL.md) | [`codex/agents-md-template.zh-CN.md`](codex/agents-md-template.zh-CN.md) |
 
 ## 安装
 
 ### Claude Code — 插件安装（推荐）
 
-一条命令，全部自动配置 — skill、hooks、`/todo-status`：
+一条命令，全部自动配置 — skills、hooks、`/todo-status`：
+
+**在 Claude Code 中（交互式）：**
 
 ```
 /plugin add github:LeaveAsien/smart-todo-flow
+```
+
+**在 Shell 中（两步）：**
+
+```bash
+claude plugin marketplace add github:LeaveAsien/smart-todo-flow
+claude plugin install smart-todo-flow
 ```
 
 无需修改 CLAUDE.md。插件的 SessionStart hook 会自动在每次会话开始时注入工作流规则。
@@ -194,6 +203,7 @@ skill 自动检测当前状态：
 |--------|---------|
 | `/todo` | 查看状态或生成 TODO |
 | `/todo-status` | 本地显示进度，零 token 消耗（仅插件安装） |
+| `/handoff` | 生成 HANDOFF.md 交接上下文（仅插件安装） |
 | `下一个` / `继续` / `接着做` | 做下一项（默认，利用缓存省 token） |
 | `全部做完` | 一次性执行所有剩余项（token 消耗较高） |
 | `做第 3 项` | 指定某一项开始 |
@@ -201,6 +211,7 @@ skill 自动检测当前状态：
 | `跳过第 4 项` | 标记为跳过 `[~]` |
 | `插入临时任务：修个 typo` | 插入临时子任务，不打乱主线 |
 | `清空 todo` | 清空 TODO.md 准备下一轮 |
+| `commit` | 以 Conventional Commits 格式提交 |
 
 ### 任务状态
 
@@ -218,6 +229,9 @@ skill 自动检测当前状态：
 - **智能 git 检测** — 续接时对比近期 commit 和未完成项，建议哪些可能已完成（仅建议，不自动标记）
 - **增量 changelog** — 每完成一项立即写入 CHANGELOG.md，有 git 按 commit 分批，无 git 按 TODO 轮次分批
 - **临时任务** — 用 `[temp]` 子任务中断主线，完成后自动回到主流程
+- **会话交接** — `/handoff` 生成 HANDOFF.md，捕获待决定事项、设计理由和对话中的隐性知识，从对话上下文生成不额外消耗 token
+- **Conventional Commits** — git commit 消息遵循 `<type>(<scope>): <description>` 格式（`feat`、`fix`、`docs`、`refactor`、`chore` 等）
+- **Hooks 自动化**（仅插件安装）— SessionStart 注入工作流规则，PostToolUse 提醒更新 changelog，UserPromptSubmit 驱动 `/todo-status` 零 token 进度面板
 - **Codex 任务面板镜像** — Codex 版可把当前 TODO 同步到会话 plan 面板，同时仍以 TODO.md 作为持久状态源
 - **无 git 支持** — 没有 git 的项目也能用，git 相关功能（智能检测、提交）自动跳过
 
@@ -244,6 +258,12 @@ skill 自动检测当前状态：
 
 **问：PLAN.md 不用 "Phase 1, Phase 2" 的格式行吗？**
 答：可以。skill 能识别多种格式——"Phase"、"Stage"、"Step"、数字编号、中文的"第一阶段"等。如果完全没有阶段结构，整个计划会被当作一个阶段处理。
+
+**问：`/todo-status` 和 `/todo` 有什么区别？**
+答：`/todo-status` 通过 hook 脚本在本地运行，显示进度但不发送任何内容到 API（零 token 消耗）。`/todo` 调用完整的 skill 进行交互式任务管理。
+
+**问：`/handoff` 能捕获 TODO 和 CHANGELOG 捕获不了的什么？**
+答：待决定的事项、设计理由、脑暴想法和对话中的隐性知识——这些只存在于聊天中，换会话就丢了。
 
 ## 许可证
 
