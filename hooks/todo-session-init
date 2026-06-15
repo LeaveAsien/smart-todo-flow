@@ -39,6 +39,6 @@ if [ -f "$TODO_FILE" ]; then
     [ "$SKIPPED" -gt 0 ] && STATUS="${STATUS} · ${SKIPPED} skipped"
     [ "$PENDING" -gt 0 ] && STATUS="${STATUS} · ${PENDING} pending"
     [ -n "$PHASE" ] && STATUS="Phase ${PHASE} · ${STATUS}"
-    echo "[smart-todo-flow] ${STATUS}"
+    echo "[smart-todo-flow] ${STATUS}" >&2
   fi
 fi

@@ -16,26 +16,40 @@ if "%~1"=="" (
 )
 
 set "HOOK_DIR=%~dp0"
+set "HOOK_SCRIPT=%HOOK_DIR%%~1"
+
+REM Capture stdin to a temp file via PowerShell.
+REM Direct cmd.exe→bash stdin piping is unreliable on Windows; this ensures
+REM the JSON payload from Claude Code reaches the hook script correctly.
+set "HOOK_INPUT=%TEMP%\smart-todo-hook-input.json"
+powershell -NoProfile -NonInteractive -Command "[IO.File]::WriteAllText('%HOOK_INPUT%', [Console]::In.ReadToEnd(), [Text.Encoding]::UTF8)" 2>nul
 
 REM Try Git for Windows bash in standard locations
 if exist "C:\Program Files\Git\bin\bash.exe" (
-    "C:\Program Files\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    "C:\Program Files\Git\bin\bash.exe" "%HOOK_SCRIPT%" %2 %3 %4 %5 %6 %7 %8 %9 < "%HOOK_INPUT%"
+    set "HOOK_EXIT=%ERRORLEVEL%"
+    del "%HOOK_INPUT%" 2>nul
+    exit /b %HOOK_EXIT%
 )
 if exist "C:\Program Files (x86)\Git\bin\bash.exe" (
-    "C:\Program Files (x86)\Git\bin\bash.exe" "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    "C:\Program Files (x86)\Git\bin\bash.exe" "%HOOK_SCRIPT%" %2 %3 %4 %5 %6 %7 %8 %9 < "%HOOK_INPUT%"
+    set "HOOK_EXIT=%ERRORLEVEL%"
+    del "%HOOK_INPUT%" 2>nul
+    exit /b %HOOK_EXIT%
 )
 
 REM Try bash on PATH (e.g. user-installed Git Bash, MSYS2, Cygwin)
 where bash >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-    bash "%HOOK_DIR%%~1" %2 %3 %4 %5 %6 %7 %8 %9
-    exit /b %ERRORLEVEL%
+    bash "%HOOK_SCRIPT%" %2 %3 %4 %5 %6 %7 %8 %9 < "%HOOK_INPUT%"
+    set "HOOK_EXIT=%ERRORLEVEL%"
+    del "%HOOK_INPUT%" 2>nul
+    exit /b %HOOK_EXIT%
 )
 
 REM No bash found - exit silently rather than error
 REM (plugin still works, just without hook context injection)
+del "%HOOK_INPUT%" 2>nul
 exit /b 0
 CMDBLOCK
 
