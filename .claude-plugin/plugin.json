@@ -1,6 +1,6 @@
 {
   "name": "smart-todo-flow",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "displayName": "Smart TODO Flow",
   "description": "Lightweight state-machine for task management, chaining PLAN.md → TODO.md → CHANGELOG.md",
   "author": {

@@ -9,7 +9,7 @@
     {
       "name": "smart-todo-flow",
       "description": "Smart TODO state machine for AI coding sessions",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "source": "./"
     }
   ]
