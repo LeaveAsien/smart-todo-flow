@@ -6,7 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" todo-session-init",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/todo-session-init.js"],
             "timeout": 5
           }
         ]
