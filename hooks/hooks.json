@@ -30,7 +30,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" todo-status",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/todo-status.js"],
             "timeout": 5
           }
         ]

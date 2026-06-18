@@ -104,7 +104,7 @@ See the full walkthrough in [`examples/`](examples/README.md).
 
 ### Claude Code — Plugin (Recommended)
 
-One command, everything auto-configured — skills, hooks, `/todo-status`:
+One command, everything auto-configured — skills, hooks, `todo-status`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/install.sh | bash
@@ -118,6 +118,8 @@ claude plugin install smart-todo-flow
 ```
 
 No CLAUDE.md modification needed. The plugin's SessionStart hook automatically injects workflow rules into every session.
+
+> **Note:** The `todo-status` hook requires Node.js on PATH. This is automatic for CLI users (installed via npm), but Desktop-only users may need to [install Node.js](https://nodejs.org/) separately.
 
 ### Claude Code — Manual
 
@@ -198,7 +200,7 @@ The skill detects the current state automatically:
 | What you say | What happens |
 |-------------|-------------|
 | `/todo` | Check status or generate TODO |
-| `/todo-status` | Show progress locally, zero token cost (plugin only) |
+| `todo-status` | Show progress locally, zero token cost (plugin only) |
 | `/handoff` | Generate HANDOFF.md for session context handoff (plugin only) |
 | `next` / `continue` / `keep going` | Do the next item (default, cache-friendly) |
 | `finish all` | Execute all remaining items in one turn (higher token cost) |
@@ -227,7 +229,7 @@ The skill detects the current state automatically:
 - **Temporary tasks** — interrupt the flow with `[temp]` sub-tasks without losing your place in the main line
 - **Session handoff** — `/handoff` generates a HANDOFF.md capturing pending decisions, design rationale, and implicit knowledge that would be lost between sessions; built from conversation context without extra token cost
 - **Conventional Commits** — git commit messages follow `<type>(<scope>): <description>` format (`feat`, `fix`, `docs`, `refactor`, `chore`, etc.)
-- **Hooks automation** (plugin only) — SessionStart injects workflow rules, PostToolUse reminds changelog updates, UserPromptSubmit powers `/todo-status` at zero token cost
+- **Hooks automation** (plugin only) — SessionStart injects workflow rules, PostToolUse reminds changelog updates, UserPromptSubmit powers `todo-status` at zero token cost
 - **Codex plan mirror** — the Codex version can mirror active TODO items into the session plan while keeping TODO.md as the durable source
 - **No-git support** — works in projects without git; git-dependent features (smart detection, commit) are skipped gracefully
 
@@ -255,8 +257,8 @@ A: Never. It only reads PLAN.md to understand your goals and phases. If the plan
 **Q: What if my PLAN.md doesn't use "Phase 1, Phase 2" format?**
 A: The skill recognizes various formats — "Phase", "Stage", "Step", numbered sections, Chinese equivalents like "第一阶段". If there's no phase structure at all, it treats the whole plan as one phase.
 
-**Q: What's the difference between `/todo-status` and `/todo`?**
-A: `/todo-status` runs locally via a hook script — it shows progress without sending anything to the API (zero token cost). `/todo` invokes the full skill for interactive task management.
+**Q: What's the difference between `todo-status` and `/todo`?**
+A: `todo-status` runs locally via a hook — it shows progress without sending anything to the API (zero token cost). `/todo` invokes the full skill for interactive task management.
 
 **Q: What does `/handoff` capture that TODO and CHANGELOG don't?**
 A: Pending decisions, design rationale, brainstorming ideas, and implicit knowledge from the conversation — things that exist only in the chat and would be lost when switching sessions.

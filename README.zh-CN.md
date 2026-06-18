@@ -104,7 +104,7 @@ skill 把规划转化为执行状态：
 
 ### Claude Code — 插件安装（推荐）
 
-一条命令，全部自动配置 — skills、hooks、`/todo-status`：
+一条命令，全部自动配置 — skills、hooks、`todo-status`：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/install.sh | bash
@@ -118,6 +118,8 @@ claude plugin install smart-todo-flow
 ```
 
 无需修改 CLAUDE.md。插件的 SessionStart hook 会自动在每次会话开始时注入工作流规则。
+
+> **注意：** `todo-status` hook 需要 Node.js 在系统 PATH 上。CLI 用户（通过 npm 安装）自动满足，但仅使用 Desktop 的用户可能需要单独[安装 Node.js](https://nodejs.org/)。
 
 ### Claude Code — 手动安装
 
@@ -198,7 +200,7 @@ skill 自动检测当前状态：
 | 你说的 | 发生什么 |
 |--------|---------|
 | `/todo` | 查看状态或生成 TODO |
-| `/todo-status` | 本地显示进度，零 token 消耗（仅插件安装） |
+| `todo-status` | 本地显示进度，零 token 消耗（仅插件安装） |
 | `/handoff` | 生成 HANDOFF.md 交接上下文（仅插件安装） |
 | `下一个` / `继续` / `接着做` | 做下一项（默认，利用缓存省 token） |
 | `全部做完` | 一次性执行所有剩余项（token 消耗较高） |
@@ -227,7 +229,7 @@ skill 自动检测当前状态：
 - **临时任务** — 用 `[temp]` 子任务中断主线，完成后自动回到主流程
 - **会话交接** — `/handoff` 生成 HANDOFF.md，捕获待决定事项、设计理由和对话中的隐性知识，从对话上下文生成不额外消耗 token
 - **Conventional Commits** — git commit 消息遵循 `<type>(<scope>): <description>` 格式（`feat`、`fix`、`docs`、`refactor`、`chore` 等）
-- **Hooks 自动化**（仅插件安装）— SessionStart 注入工作流规则，PostToolUse 提醒更新 changelog，UserPromptSubmit 驱动 `/todo-status` 零 token 进度面板
+- **Hooks 自动化**（仅插件安装）— SessionStart 注入工作流规则，PostToolUse 提醒更新 changelog，UserPromptSubmit 驱动 `todo-status` 零 token 进度面板
 - **Codex 任务面板镜像** — Codex 版可把当前 TODO 同步到会话 plan 面板，同时仍以 TODO.md 作为持久状态源
 - **无 git 支持** — 没有 git 的项目也能用，git 相关功能（智能检测、提交）自动跳过
 
@@ -255,8 +257,8 @@ skill 自动检测当前状态：
 **问：PLAN.md 不用 "Phase 1, Phase 2" 的格式行吗？**
 答：可以。skill 能识别多种格式——"Phase"、"Stage"、"Step"、数字编号、中文的"第一阶段"等。如果完全没有阶段结构，整个计划会被当作一个阶段处理。
 
-**问：`/todo-status` 和 `/todo` 有什么区别？**
-答：`/todo-status` 通过 hook 脚本在本地运行，显示进度但不发送任何内容到 API（零 token 消耗）。`/todo` 调用完整的 skill 进行交互式任务管理。
+**问：`todo-status` 和 `/todo` 有什么区别？**
+答：`todo-status` 通过 hook 在本地运行，显示进度但不发送任何内容到 API（零 token 消耗）。`/todo` 调用完整的 skill 进行交互式任务管理。
 
 **问：`/handoff` 能捕获 TODO 和 CHANGELOG 捕获不了的什么？**
 答：待决定的事项、设计理由、脑暴想法和对话中的隐性知识——这些只存在于聊天中，换会话就丢了。
