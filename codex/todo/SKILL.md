@@ -284,18 +284,31 @@ Triggered only by the user. After clearing, `TODO.md` retains only:
 
 Triggered only by the user.
 
-First read recent git log and follow the project's existing commit message style. If no clear style exists, use:
+Commit message format: **Conventional Commits** specification. First read the project's recent git log. If the project already uses a different convention, follow that instead.
 
 ```text
-<summary>: <keyword1>/<keyword2>/<keyword3>
-  - <specific change 1>
-  - <specific change 2>
+<type>(<scope>): <description>
+
+- <module or theme>: <high-level summary of the change>
+- <module or theme>: <high-level summary of the change>
 ```
 
-- First line: `<verb> <summary>: <key changes separated by />`
-- Body is optional; use bullets when there are 2+ meaningful changes
-- Each bullet must be specific enough to understand without reading the diff
+- First line <= 72 characters
+- Types: `feat` / `fix` / `docs` / `refactor` / `chore` / `test` / `style` / `perf`
+- Scope: optional, the module or area affected, such as `skill`, `hooks`, or `plugin`
+- Body is optional; use it when 2+ modules, user-visible behaviors, or documentation surfaces changed
+- Body bullets should be high-level and modular, grouping details by area instead of listing every file edit
+- Each bullet must be specific enough to understand the change without reading the diff
 - Include quantified results when available
+
+Example:
+
+```text
+docs(codex): align handoff support
+
+- skill: add Codex-native handoff entrypoint and metadata
+- docs: update installation and command references for Codex users
+```
 
 # Reference
 
