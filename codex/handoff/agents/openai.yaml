@@ -1,0 +1,4 @@
+interface:
+  display_name: "handoff"
+  short_description: "Generate HANDOFF.md for Codex session handoff"
+  default_prompt: "/handoff - capture decisions, context, and in-progress work for the next Codex conversation."
