@@ -197,7 +197,7 @@ When the user selects a task:
 4. If the user marks an item blocked or skipped instead of implementing it, update `TODO.md`, append changelog if appropriate, and mark the mirrored plan item completed with the reason in the step text
 5. Implement the task
 
-Do not create Claude-specific Task objects or call Claude-only tools.
+Do not create non-Codex platform task objects or call non-Codex platform tools.
 
 ## Temporary Tasks
 
@@ -343,4 +343,4 @@ For the workflow to fully work, the target project should include the Codex temp
 - Smart git detection only suggests; never auto-mark without confirmation
 - Blocked/skipped items count as resolved for flow, but must be tracked separately
 - Write changelog immediately on each item completion
-- Keep platform-specific references Codex-native; do not mention Claude-only tools in this version
+- Keep platform-specific references Codex-native; avoid non-Codex tool references in this version

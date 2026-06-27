@@ -116,4 +116,4 @@ One to three bullets. Keep them brief and actionable:
 - Keep it short. If a section would only repeat `TODO.md`, `CHANGELOG.md`, or git history, reference those sources instead.
 - The value of `HANDOFF.md` is in `待决定` and `关键上下文`. If those are empty, the handoff has little value; prompt the user to think about what their future self should know.
 - Add the session date and topic as a blockquote under the heading: `> 本次会话：YYYY-MM-DD · topic`.
-- Keep platform-specific behavior Codex-native. Do not mention Claude-only tools unless contrasting documented platform limitations.
+- Keep platform-specific behavior Codex-native. Avoid non-Codex tool references unless contrasting documented platform limitations.
