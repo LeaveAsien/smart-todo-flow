@@ -14,3 +14,9 @@ This project uses three documents to manage the task workflow. Paste these rules
 - After completing a TODO item -> immediately append to CHANGELOG.md; group related changes under the same heading
 - CHANGELOG format: `## YYYY-MM-DD (batch summary)` + `- <verb> <description>`
 - For detailed TODO state management (generation, resuming, phase flow), see `/todo`
+- For session handoff, use `/handoff` to generate `HANDOFF.md` with pending decisions, design rationale, and context that would be lost between Codex conversations
+
+### Codex Notes
+
+- Codex does not run Claude Code plugin hooks. Keep these always-on workflow rules in `AGENTS.md` / `AGENT.md` for behavior outside active `/todo` sessions.
+- Install both Codex skills when using the full workflow: `codex/todo/` for task state and `codex/handoff/` for session handoff.

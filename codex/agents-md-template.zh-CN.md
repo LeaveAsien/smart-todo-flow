@@ -14,3 +14,9 @@
 - 每完成一个 TODO 项 → 立即在 CHANGELOG.md 追加记录，同一批改动归在同一个标题下
 - CHANGELOG 格式：`## YYYY-MM-DD (批次摘要)` + `- <动词> <描述>`
 - 详细的 TODO 状态管理（生成、续接、阶段流转）见 `/todo`
+- 会话交接使用 `/handoff` 生成 `HANDOFF.md`，记录待决定事项、设计理由和跨 Codex 会话会丢失的上下文
+
+### Codex 注意事项
+
+- Codex 不运行 Claude Code plugin hooks。若要在非 `/todo` 会话中保持常驻行为，请把这些规则保留在 `AGENTS.md` / `AGENT.md`。
+- 完整工作流建议同时安装两个 Codex skill：`codex/todo/` 负责任务状态，`codex/handoff/` 负责会话交接。
