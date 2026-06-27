@@ -98,7 +98,7 @@ See the full walkthrough in [`examples/`](examples/README.md).
 |---------|--------|------------------------|
 | Claude Code (Plugin) | [`todo`](skills/todo/SKILL.md), [`handoff`](skills/handoff/SKILL.md) | Not needed (hooks auto-inject) |
 | Claude Code (Manual) | [`todo`](skills/todo/SKILL.md) | [`claude/claude-md-template.md`](claude/claude-md-template.md) |
-| Codex | [`todo`](codex/todo/SKILL.md) | [`codex/agents-md-template.md`](codex/agents-md-template.md) |
+| Codex | [`todo`](codex/todo/SKILL.md), [`handoff`](codex/handoff/SKILL.md) | [`codex/agents-md-template.md`](codex/agents-md-template.md) |
 
 ## Install
 
@@ -155,21 +155,29 @@ This enables always-on behaviors (like writing changelog after every change) eve
 
 ```bash
 # macOS / Linux
-mkdir -p ~/.codex/skills/todo/agents
+mkdir -p ~/.codex/skills/todo/agents ~/.codex/skills/handoff/agents
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md \
   -o ~/.codex/skills/todo/SKILL.md
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml \
   -o ~/.codex/skills/todo/agents/openai.yaml
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/SKILL.md \
+  -o ~/.codex/skills/handoff/SKILL.md
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/agents/openai.yaml \
+  -o ~/.codex/skills/handoff/agents/openai.yaml
 
 # Windows (PowerShell)
-New-Item -ItemType Directory -Force "$HOME/.codex/skills/todo/agents" | Out-Null
+New-Item -ItemType Directory -Force "$HOME/.codex/skills/todo/agents","$HOME/.codex/skills/handoff/agents" | Out-Null
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md" `
   -OutFile "$HOME/.codex/skills/todo/SKILL.md"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml" `
   -OutFile "$HOME/.codex/skills/todo/agents/openai.yaml"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/SKILL.md" `
+  -OutFile "$HOME/.codex/skills/handoff/SKILL.md"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/agents/openai.yaml" `
+  -OutFile "$HOME/.codex/skills/handoff/agents/openai.yaml"
 ```
 
-**Or manually:** copy the [`codex/todo/`](codex/todo/) folder into `~/.codex/skills/todo/`.
+**Or manually:** copy [`codex/todo/`](codex/todo/) into `~/.codex/skills/todo/` and [`codex/handoff/`](codex/handoff/) into `~/.codex/skills/handoff/`.
 
 #### 2. Add rules to your project's AGENTS.md or AGENT.md
 
@@ -201,7 +209,7 @@ The skill detects the current state automatically:
 |-------------|-------------|
 | `/todo` | Check status or generate TODO |
 | `todo-status` | Show progress locally, zero token cost (plugin only) |
-| `/handoff` | Generate HANDOFF.md for session context handoff (plugin only) |
+| `/handoff` | Generate HANDOFF.md for session context handoff (Claude plugin + Codex) |
 | `next` / `continue` / `keep going` | Do the next item (default, cache-friendly) |
 | `finish all` | Execute all remaining items in one turn (higher token cost) |
 | `do item 3` | Work on a specific item |
@@ -227,7 +235,7 @@ The skill detects the current state automatically:
 - **Smart git detection** — on resume, compares recent commits against unchecked items and suggests which ones might already be done (never auto-marks, always asks)
 - **Incremental changelog** — writes to CHANGELOG.md immediately on each item completion, not after the fact; batches by git commit (or by TODO round if no git)
 - **Temporary tasks** — interrupt the flow with `[temp]` sub-tasks without losing your place in the main line
-- **Session handoff** — `/handoff` generates a HANDOFF.md capturing pending decisions, design rationale, and implicit knowledge that would be lost between sessions; built from conversation context without extra token cost
+- **Session handoff** — `/handoff` generates a HANDOFF.md capturing pending decisions, design rationale, and implicit knowledge that would be lost between sessions; available in Claude Code plugin installs and Codex skill installs
 - **Conventional Commits** — git commit messages follow `<type>(<scope>): <description>` format (`feat`, `fix`, `docs`, `refactor`, `chore`, etc.)
 - **Hooks automation** (plugin only) — SessionStart injects workflow rules, PostToolUse reminds changelog updates, UserPromptSubmit powers `todo-status` at zero token cost
 - **Codex plan mirror** — the Codex version can mirror active TODO items into the session plan while keeping TODO.md as the durable source
@@ -261,7 +269,7 @@ A: The skill recognizes various formats — "Phase", "Stage", "Step", numbered s
 A: `todo-status` runs locally via a hook — it shows progress without sending anything to the API (zero token cost). `/todo` invokes the full skill for interactive task management.
 
 **Q: What does `/handoff` capture that TODO and CHANGELOG don't?**
-A: Pending decisions, design rationale, brainstorming ideas, and implicit knowledge from the conversation — things that exist only in the chat and would be lost when switching sessions.
+A: Pending decisions, design rationale, brainstorming ideas, and implicit knowledge from the conversation — things that exist only in the chat and would be lost when switching sessions. In Codex, install the `codex/handoff/` skill folder alongside `codex/todo/`.
 
 ## License
 

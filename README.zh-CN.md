@@ -98,7 +98,7 @@ skill 把规划转化为执行状态：
 |------|--------|--------------|
 | Claude Code（插件） | [`todo`](skills/todo/SKILL.md), [`handoff`](skills/handoff/SKILL.md) | 不需要（hooks 自动注入） |
 | Claude Code（手动） | [`todo`](skills/todo/SKILL.md) | [`claude/claude-md-template.zh-CN.md`](claude/claude-md-template.zh-CN.md) |
-| Codex | [`todo`](codex/todo/SKILL.md) | [`codex/agents-md-template.zh-CN.md`](codex/agents-md-template.zh-CN.md) |
+| Codex | [`todo`](codex/todo/SKILL.md), [`handoff`](codex/handoff/SKILL.md) | [`codex/agents-md-template.zh-CN.md`](codex/agents-md-template.zh-CN.md) |
 
 ## 安装
 
@@ -155,21 +155,29 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-
 
 ```bash
 # macOS / Linux
-mkdir -p ~/.codex/skills/todo/agents
+mkdir -p ~/.codex/skills/todo/agents ~/.codex/skills/handoff/agents
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md \
   -o ~/.codex/skills/todo/SKILL.md
 curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml \
   -o ~/.codex/skills/todo/agents/openai.yaml
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/SKILL.md \
+  -o ~/.codex/skills/handoff/SKILL.md
+curl -fsSL https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/agents/openai.yaml \
+  -o ~/.codex/skills/handoff/agents/openai.yaml
 
 # Windows (PowerShell)
-New-Item -ItemType Directory -Force "$HOME/.codex/skills/todo/agents" | Out-Null
+New-Item -ItemType Directory -Force "$HOME/.codex/skills/todo/agents","$HOME/.codex/skills/handoff/agents" | Out-Null
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/SKILL.md" `
   -OutFile "$HOME/.codex/skills/todo/SKILL.md"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/todo/agents/openai.yaml" `
   -OutFile "$HOME/.codex/skills/todo/agents/openai.yaml"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/SKILL.md" `
+  -OutFile "$HOME/.codex/skills/handoff/SKILL.md"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/LeaveAsien/smart-todo-flow/master/codex/handoff/agents/openai.yaml" `
+  -OutFile "$HOME/.codex/skills/handoff/agents/openai.yaml"
 ```
 
-**手动安装：** 把 [`codex/todo/`](codex/todo/) 目录复制到 `~/.codex/skills/todo/`。
+**手动安装：** 把 [`codex/todo/`](codex/todo/) 目录复制到 `~/.codex/skills/todo/`，把 [`codex/handoff/`](codex/handoff/) 目录复制到 `~/.codex/skills/handoff/`。
 
 #### 2. 在项目的 AGENTS.md 或 AGENT.md 中添加规则
 
@@ -201,7 +209,7 @@ skill 自动检测当前状态：
 |--------|---------|
 | `/todo` | 查看状态或生成 TODO |
 | `todo-status` | 本地显示进度，零 token 消耗（仅插件安装） |
-| `/handoff` | 生成 HANDOFF.md 交接上下文（仅插件安装） |
+| `/handoff` | 生成 HANDOFF.md 交接上下文（Claude 插件 + Codex） |
 | `下一个` / `继续` / `接着做` | 做下一项（默认，利用缓存省 token） |
 | `全部做完` | 一次性执行所有剩余项（token 消耗较高） |
 | `做第 3 项` | 指定某一项开始 |
@@ -227,7 +235,7 @@ skill 自动检测当前状态：
 - **智能 git 检测** — 续接时对比近期 commit 和未完成项，建议哪些可能已完成（仅建议，不自动标记）
 - **增量 changelog** — 每完成一项立即写入 CHANGELOG.md，有 git 按 commit 分批，无 git 按 TODO 轮次分批
 - **临时任务** — 用 `[temp]` 子任务中断主线，完成后自动回到主流程
-- **会话交接** — `/handoff` 生成 HANDOFF.md，捕获待决定事项、设计理由和对话中的隐性知识，从对话上下文生成不额外消耗 token
+- **会话交接** — `/handoff` 生成 HANDOFF.md，捕获待决定事项、设计理由和对话中的隐性知识；支持 Claude Code 插件安装和 Codex skill 安装
 - **Conventional Commits** — git commit 消息遵循 `<type>(<scope>): <description>` 格式（`feat`、`fix`、`docs`、`refactor`、`chore` 等）
 - **Hooks 自动化**（仅插件安装）— SessionStart 注入工作流规则，PostToolUse 提醒更新 changelog，UserPromptSubmit 驱动 `todo-status` 零 token 进度面板
 - **Codex 任务面板镜像** — Codex 版可把当前 TODO 同步到会话 plan 面板，同时仍以 TODO.md 作为持久状态源
@@ -261,7 +269,7 @@ skill 自动检测当前状态：
 答：`todo-status` 通过 hook 在本地运行，显示进度但不发送任何内容到 API（零 token 消耗）。`/todo` 调用完整的 skill 进行交互式任务管理。
 
 **问：`/handoff` 能捕获 TODO 和 CHANGELOG 捕获不了的什么？**
-答：待决定的事项、设计理由、脑暴想法和对话中的隐性知识——这些只存在于聊天中，换会话就丢了。
+答：待决定的事项、设计理由、脑暴想法和对话中的隐性知识——这些只存在于聊天中，换会话就丢了。在 Codex 中，把 `codex/handoff/` skill 目录和 `codex/todo/` 一起安装即可。
 
 ## 许可证
 
